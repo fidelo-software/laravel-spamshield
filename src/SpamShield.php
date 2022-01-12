@@ -137,7 +137,7 @@ class SpamShield {
 			throw new BannedException('Banned!');
 		}
 
-		// Went through strategies to check for spam
+		// Run through strategies to check for spam
 		$detected = $this->strategies->first(function(AbstractStrategy $strategy) use($form, $request) {
 			return $strategy->detect($form, $request);
 		});

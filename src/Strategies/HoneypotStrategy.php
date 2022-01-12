@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 /**
  * Honeypot
  *
- * Include random number of hidden input fields that will be filled by bots but not by users.
+ * Include number of hidden input fields that will be filled by bots but not by users.
  */
 class HoneypotStrategy extends AbstractStrategy {
 

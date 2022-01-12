@@ -32,14 +32,16 @@ class LinkStrategy extends AbstractStrategy {
 				continue;
 			}
 
+			// Find links in value
 			preg_match_all('@http://|https://|ftp://@', $value, $result);
+
 			if (isset($result[0])) {
 				$linkCount += count($result[0]);
 			}
 		}
 
 		if($linkCount > $this->numberOfLinksAllowed) {
-			// Maximum number of allowed link exceeded
+			// Maximum number of allowed links exceeded
 			$this->info(['found' => $linkCount]);
 			return true;
 		}
