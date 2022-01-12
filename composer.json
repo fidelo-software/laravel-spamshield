@@ -1,0 +1,23 @@
+{
+	"name": "fidelo-software/laravel-spamshield",
+	"description": "Simple spam detection",
+	"keywords": ["spam","spamshield"],
+	"license": "MIT",
+	"homepage": "https://fidelo.com",
+	"authors": [
+		{
+			"name": "Fidelo Software GmbH",
+			"email": "support@fidelo.com"
+		}
+	],
+	"require": {
+		"php": "^7.4|^8.0",
+		"illuminate/http": "^7.30",
+		"illuminate/support": "^7.30"
+	},
+	"autoload": {
+		"psr-4": {
+			"FideloSoftware\\Spam\\": "src/"
+		}
+	}
+}
