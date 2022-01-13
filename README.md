@@ -23,16 +23,16 @@ $spamshield = new \FideloSoftware\Spam\SpamShield(
 );
 ```
 
-Include all html parts of defined strategies in your form rendering process
-```php
-// Form rendering
-echo $spamshield->html($form);
-```
-
 Start all strategies onload processes when form is initializing
 ```php
 // Form initialization 
 $spamshield->onload($form, $request);
+```
+
+Include all html parts of defined strategies in your form rendering process
+```php
+// Form rendering
+echo $spamshield->html($form);
 ```
 
 Execute all strategies on form submit to check for spam

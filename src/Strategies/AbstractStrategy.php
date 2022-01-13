@@ -13,7 +13,7 @@ abstract class AbstractStrategy {
 	protected $log = [];
 
 	/**
-	 * Define strategy actions on form initialisation
+	 * Define strategy actions on form initialization
 	 *
 	 * @param Form $form
 	 * @param Request $request
