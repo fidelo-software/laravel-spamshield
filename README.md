@@ -16,7 +16,7 @@ $spamshield = new \FideloSoftware\Spam\SpamShield(
         new \FideloSoftware\Spam\Strategies\HoneypotStrategy(3),
         new \FideloSoftware\Spam\Strategies\TimestampStrategy($store, 5),
         new \FideloSoftware\Spam\Strategies\LinkStrategy(0),
-        new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => ['firstname' => 'John', 'lastname' => 'Doe']]),
+        new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => ['John Doe']]),
     ], 
     $store
     $logger // optional

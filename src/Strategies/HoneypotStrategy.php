@@ -25,6 +25,10 @@ class HoneypotStrategy extends AbstractStrategy {
 		$this->numberOfFields = $numberOfFields;
 	}
 
+	public function getAttributePool(): array {
+		return $this->attrPool;
+	}
+
 	public function html(Form $form): string {
 
 		$fieldNames = $this->generateRandomAttrArray($this->numberOfFields);

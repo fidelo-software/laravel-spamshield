@@ -17,13 +17,18 @@ class LinkStrategy extends AbstractStrategy {
 	private $fieldNames;
 
 	public function __construct(int $numberOfLinksAllowed = 0, array $fieldNames = []) {
+
 		$this->numberOfLinksAllowed = $numberOfLinksAllowed;
 		$this->fieldNames = $fieldNames;
 	}
 
 	public function detect(Form $form, Request $request): bool {
 
-		$values = $form->getFieldValues($this->fieldNames);
+		$values = $form->getFieldValues();
+
+		if (!in_array('*', $this->fieldNames)) {
+			$values = array_intersect_key($values, array_flip($this->fieldNames));
+		}
 
 		$linkCount = 0;
 		foreach ($values as $field => $value) {

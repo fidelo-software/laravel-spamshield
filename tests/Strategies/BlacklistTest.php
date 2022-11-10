@@ -1,0 +1,57 @@
+<?php
+
+beforeEach(function () {
+	$this->request = new \Illuminate\Http\Request();
+});
+
+test('Blacklist - Detect true (value used)', function () {
+
+	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
+		getFieldValues: fn () => ['name' => 'John Doe']
+	);
+
+	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
+
+	$detected = $strategy->detect($form, $this->request);
+
+	$this->assertTrue($detected);
+});
+
+test('Blacklist - Detect true (value not used)', function () {
+
+	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
+		getFieldValues: fn () => ['name' => 'John Smith']
+	);
+
+	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
+
+	$detected = $strategy->detect($form, $this->request);
+
+	$this->assertFalse($detected);
+});
+
+test('Blacklist - Detect true (one value used)', function () {
+
+	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
+		getFieldValues: fn () => ['name' => 'John Doe']
+	);
+
+	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => ['John Doe', 'John Smith']]);
+
+	$detected = $strategy->detect($form, $this->request);
+
+	$this->assertTrue($detected);
+});
+
+test('Blacklist - Detect false (used in other field)', function () {
+
+	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
+		getFieldValues: fn () => ['comment' => 'John Smith']
+	);
+
+	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
+
+	$detected = $strategy->detect($form, $this->request);
+
+	$this->assertFalse($detected);
+});

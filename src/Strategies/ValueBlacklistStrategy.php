@@ -14,7 +14,6 @@ class ValueBlacklistStrategy extends AbstractStrategy {
 
 	private $blacklist = [];
 
-	private $fieldNames;
 
 	/**
 	 * e.g.:
@@ -24,44 +23,36 @@ class ValueBlacklistStrategy extends AbstractStrategy {
 	 * ]
 	 *
 	 * @param array $blacklist
-	 * @param array $fieldNames
 	 */
-	public function __construct(array $blacklist, array $fieldNames = []) {
+	public function __construct(array $blacklist) {
 		$this->blacklist = $blacklist;
-		$this->fieldNames = $fieldNames;
 	}
 
 	public function detect(Form $form, Request $request): bool {
 
-		$values = $form->getFieldValues($this->fieldNames);
+		$values = $form->getFieldValues();
 
-		$checkValue = function ($configField, $forbiddenValue) use ($values) {
-			foreach ($values as $field => $value) {
-				if (
-					is_string($value) &&
-					strpos($field, $configField) !== false &&
-					$value == $forbiddenValue
-				) {
-					return true;
-				}
+		$checkValue = function ($formField, $forbiddenValue) use ($values) {
+			$value = $values[$formField] ?? '';
+			if (is_string($value) && $value == $forbiddenValue) {
+				return true;
 			}
-
 			return false;
 		};
 
 		$matches = 0;
-		foreach($this->blacklist as $configField => $forbiddenValue) {
+		foreach($this->blacklist as $formField => $forbiddenValue) {
 
 			$checked = [];
 			if (is_array($forbiddenValue)) {
-				foreach ($forbiddenValue as $configInnerField => $innerForbiddenValue) {
-					$checked[] = $checkValue($configInnerField, $innerForbiddenValue);
+				foreach ($forbiddenValue as $innerForbiddenValue) {
+					$checked[] = $checkValue($formField, $innerForbiddenValue);
 				}
 			} else {
-				$checked[] = $checkValue($configField, $forbiddenValue);
+				$checked[] = $checkValue($formField, $forbiddenValue);
 			}
 
-			if (!in_array(false, $checked)) {
+			if (in_array(true, $checked)) {
 				$matches++;
 			}
 		}

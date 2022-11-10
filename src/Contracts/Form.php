@@ -18,9 +18,8 @@ interface Form {
 	 * 		'fieldname' => 'value'
 	 * ]
 	 *
-	 * @param array $fieldNames
 	 * @return array
 	 */
-	public function getFieldValues(array $fieldNames = []): array;
+	public function getFieldValues(): array;
 
 }
