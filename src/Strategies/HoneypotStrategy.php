@@ -16,13 +16,16 @@ class HoneypotStrategy extends AbstractStrategy {
 	private $numberOfFields;
 
 	private $attrPool = [
-		'contact_me_by_fax', 'additional_information_about_me', 'my_phone_number', 'address_zip_field',
-		'my_allergies', 'address_city_field', 'my_mobile_phone_number', 'my_private_email',
+		'contact_me_by_fax', 'additional_information_about_me', 'my_phone_number', 'information_field',
+		'my_allergies', 'address_field', 'additional_data_about_me', 'my_private_field',
 		// to be continued
 	];
 
-	public function __construct(int $numberOfFields = 3) {
+	public function __construct(int $numberOfFields = 3, array $attrPool = []) {
 		$this->numberOfFields = $numberOfFields;
+		if (!empty($attrPool)) {
+			$this->attrPool = $attrPool;
+		}
 	}
 
 	public function getAttributePool(): array {
@@ -36,7 +39,11 @@ class HoneypotStrategy extends AbstractStrategy {
 		$html = '';
 		// Include defined number of fields as input fields.
 		foreach($fieldNames as $nameAttr) {
-			$html .= sprintf('<div class=""><label for="%s"></label><input type="text" name="%s" id="%s" value="" tabindex="-1" autocomplete="off" placeholder="Please enter" /></div>', $nameAttr, $nameAttr, $nameAttr);
+			$html .= sprintf('
+				<div class="">
+					<label for="%s"></label>
+					<input type="text" name="%s" id="%s" value="" tabindex="-1" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false" placeholder="Please enter" />
+				</div>', $nameAttr, $nameAttr, $nameAttr);
 		}
 
 		return $html;

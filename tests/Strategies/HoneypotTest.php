@@ -13,7 +13,7 @@ test('Honeypot - Html', function () {
 	$matches = [];
 	preg_match_all('/\<input(.*)name="(.*)"(.*)\/>/U', $html, $matches);
 
-	expect($matches[2])->toHaveCount($fieldsCount);
+	expect(array_unique($matches[2]))->toHaveCount($fieldsCount);
 
 	$this->assertEmpty(array_diff($matches[2], $honeypot->getAttributePool()));
 });
@@ -53,4 +53,17 @@ test('Honeypot - Detect false (not existing)', function () {
 	$detected = $honeypot->detect($this->form, $request);
 
 	$this->assertFalse($detected);
+});
+
+test('Honeypot - Overwrite attr pool', function () {
+	$attr = ['attr1', 'attr2', 'attr3'];
+
+	$honeypot = new \FideloSoftware\Spam\Strategies\HoneypotStrategy(3, $attr);
+
+	$html = $honeypot->html($this->form);
+
+	$matches = [];
+	preg_match_all('/\<input(.*)name="(.*)"(.*)\/>/U', $html, $matches);
+
+	$this->assertEmpty(array_diff($attr, $matches[2]));
 });
