@@ -30,7 +30,7 @@ class LinkStrategy extends AbstractStrategy {
 			$values = array_intersect_key($values, array_flip($this->fieldNames));
 		}
 
-		$linkCount = 0;
+        $log = [];
 		foreach ($values as $field => $value) {
 			// Allow links in URL name attributes
 			if (!is_string($value) || strpos($field, 'url') !== false) {
@@ -41,13 +41,15 @@ class LinkStrategy extends AbstractStrategy {
 			preg_match_all('@http://|https://|ftp://@', $value, $result);
 
 			if (isset($result[0])) {
-				$linkCount += count($result[0]);
+                $log[$field] = count($result[0]);
 			}
 		}
 
+        $linkCount = array_sum($log);
+
 		if($linkCount > $this->numberOfLinksAllowed) {
 			// Maximum number of allowed links exceeded
-			$this->info(['found' => $linkCount]);
+			$this->info($log);
 			return true;
 		}
 
