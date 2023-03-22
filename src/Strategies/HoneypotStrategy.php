@@ -16,8 +16,8 @@ class HoneypotStrategy extends AbstractStrategy {
 	private $numberOfFields;
 
 	private $attrPool = [
-		'contact_me_by_fax', 'additional_information_about_me', 'my_phone_number', 'information_field',
-		'my_allergies', 'address_field', 'additional_data_about_me', 'my_private_field',
+		'contact_me_by_fax', 'additional_information_about_me', 'my_detail_number', 'information_field',
+		'my_allergies', 'contact_field', 'additional_data_about_me', 'my_private_field',
 		// to be continued
 	];
 
