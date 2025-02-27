@@ -1,23 +1,21 @@
 <?php
 
 beforeEach(function () {
-	$this->form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect();
+	$this->form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
 
-	$this->strategy = mock(\FideloSoftware\Spam\Strategies\AbstractStrategy::class);
+	$this->strategy = Mockery::mock(\FideloSoftware\Spam\Strategies\AbstractStrategy::class);
 });
 
 test('Banned false', function() {
 
 	$maxAttempts = \FideloSoftware\Spam\SpamShield::MAX_ATTEMPTS;
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => ($maxAttempts - 1)
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->once()->andReturn($maxAttempts - 1);
 
-	$request = mock(\Illuminate\Http\Request::class)->expect(
-		ip: fn () => 'testing',
-		exists: fn () => false
-	);
+	$request = Mockery::mock(\Illuminate\Http\Request::class);
+	$request->shouldReceive('ip')->once()->andReturn('testing');
+	$request->shouldReceive('exists')->once()->andReturn(false);
 
 	$banned = \FideloSoftware\Spam\SpamShield::isBanned($store, $request);
 
@@ -28,14 +26,12 @@ test('Banned true', function() {
 
 	$maxAttempts = \FideloSoftware\Spam\SpamShield::MAX_ATTEMPTS;
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => ($maxAttempts + 1)
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->once()->andReturn($maxAttempts + 1);
 
-	$request = mock(\Illuminate\Http\Request::class)->expect(
-		ip: fn () => 'testing',
-		exists: fn () => false
-	);
+	$request = Mockery::mock(\Illuminate\Http\Request::class);
+	$request->shouldReceive('ip')->once()->andReturn('testing');
+	$request->shouldReceive('exists')->once()->andReturn(false);
 
 	$banned = \FideloSoftware\Spam\SpamShield::isBanned($store, $request);
 
@@ -46,15 +42,13 @@ test('Banned exception', function() {
 
 	$maxAttempts = \FideloSoftware\Spam\SpamShield::MAX_ATTEMPTS;
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => ($maxAttempts + 1),
-		put: fn () => null
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->atLeast()->once()->andReturn($maxAttempts + 1);
+	$store->shouldReceive('put')->atLeast()->once()->andReturn(null);
 
-	$request = mock(\Illuminate\Http\Request::class)->expect(
-		ip: fn () => 'testing',
-		exists: fn () => false
-	);
+	$request = Mockery::mock(\Illuminate\Http\Request::class);
+	$request->shouldReceive('ip')->atLeast()->once()->andReturn('testing');
+	$request->shouldReceive('exists')->atLeast()->once()->andReturn(false);
 
 	$spamShield = new \FideloSoftware\Spam\SpamShield([], $store);
 	$spamShield->detect($this->form, $request);
@@ -64,13 +58,9 @@ test('Banned exception', function() {
 test('Detect no spam', function() {
 
 	expect(function () {
-		$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-			get: fn () => 0
-		);
-		$request = mock(\Illuminate\Http\Request::class)->expect(
-			ip: fn () => 'testing',
-			exists: fn () => false
-		);
+		$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+
+		$request = Mockery::mock(\Illuminate\Http\Request::class);
 
 		$strategy = $this->strategy->expect(detect: fn () => false, cleanUp: fn () => null);
 
@@ -82,18 +72,18 @@ test('Detect no spam', function() {
 
 test('Detect spam', function() {
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => 0,
-		put: fn () => null
-	);
-	$request = mock(\Illuminate\Http\Request::class)->expect(
-		ip: fn () => 'testing',
-		exists: fn () => false
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->atLeast()->once()->andReturn(0);
+	$store->shouldReceive('put')->atLeast()->once()->andReturn(null);
 
-	$strategy = $this->strategy->expect(detect: fn () => true, cleanUp: fn () => null);
+	$request = Mockery::mock(\Illuminate\Http\Request::class);
+	$request->shouldReceive('ip')->atLeast()->once()->andReturn('testing');
+	$request->shouldReceive('exists')->atLeast()->once()->andReturn(false);
 
-	$spamShield = new \FideloSoftware\Spam\SpamShield([$strategy], $store);
+	$this->strategy->shouldReceive('detect')->atLeast()->once()->andReturn(true);
+	$this->strategy->shouldReceive('cleanUp')->atLeast()->once()->andReturn(null);
+
+	$spamShield = new \FideloSoftware\Spam\SpamShield([$this->strategy], $store);
 	$spamShield->detect($this->form, $request);
 
 })->throws(\FideloSoftware\Spam\Exceptions\SpamDetectionException::class);;

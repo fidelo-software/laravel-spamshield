@@ -12,12 +12,12 @@
 	],
 	"require": {
 		"php": "^8.0",
-		"illuminate/http": "9.*",
-		"illuminate/support": "9.*"
+		"illuminate/http": "^9.0|^10.0|^11.0|^12.0",
+		"illuminate/support": "^9.0|^10.0|^11.0|^12.0"
 	},
 	"require-dev": {
-		"pestphp/pest": "^1.22",
-		"pestphp/pest-plugin-mock": "^1.0"
+		"pestphp/pest": "^3.0",
+		"mockery/mockery": "1.6.*"
 	},
 	"autoload": {
 		"psr-4": {

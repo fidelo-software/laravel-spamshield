@@ -6,9 +6,8 @@ beforeEach(function () {
 
 test('Blacklist - Detect true (value used)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'John Doe']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'John Doe']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
 
@@ -19,9 +18,8 @@ test('Blacklist - Detect true (value used)', function () {
 
 test('Blacklist - Detect true (value not used)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'John Smith']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'John Smith']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
 
@@ -32,9 +30,8 @@ test('Blacklist - Detect true (value not used)', function () {
 
 test('Blacklist - Detect true (one value used)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'John Doe']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'John Doe']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => ['John Doe', 'John Smith']]);
 
@@ -45,9 +42,8 @@ test('Blacklist - Detect true (one value used)', function () {
 
 test('Blacklist - Detect false (used in other field)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['comment' => 'John Smith']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['comment' => 'John Smith']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\ValueBlacklistStrategy(['name' => 'John Doe']);
 

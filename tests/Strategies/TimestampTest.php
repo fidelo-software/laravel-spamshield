@@ -2,18 +2,17 @@
 
 beforeEach(function () {
 	$uid = \Illuminate\Support\Str::random(10);
-	$this->form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getUid: fn () => $uid
-	);
+	$this->form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$this->form->shouldReceive('getUid')->atLeast()->once()->andReturn($uid);
 	$this->request = new \Illuminate\Http\Request();
 });
 
 test('Timestamp - Detect true', function () {
 	$begin = time();
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => $begin
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->atLeast()->once()->andReturn($begin);
+
 	$strategy = new \FideloSoftware\Spam\Strategies\TimestampStrategy($store, 2);
 
 	$detected = $strategy->detect($this->form, $this->request);
@@ -26,9 +25,9 @@ test('Timestamp - Detect false', function () {
 	$seconds = 1;
 	$begin = time();
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => $begin
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->atLeast()->once()->andReturn($begin);
+
 	$strategy = new \FideloSoftware\Spam\Strategies\TimestampStrategy($store, $seconds);
 
 	sleep($seconds);
@@ -41,9 +40,9 @@ test('Timestamp - Detect false', function () {
 
 test('Timestamp - Detect false (no store value)', function () {
 
-	$store = mock(\Illuminate\Contracts\Cache\Store::class)->expect(
-		get: fn () => null
-	);
+	$store = Mockery::mock(\Illuminate\Contracts\Cache\Store::class);
+	$store->shouldReceive('get')->atLeast()->once()->andReturn(null);
+
 	$strategy = new \FideloSoftware\Spam\Strategies\TimestampStrategy($store, 2);
 	$detected = $strategy->detect($this->form, $this->request);
 

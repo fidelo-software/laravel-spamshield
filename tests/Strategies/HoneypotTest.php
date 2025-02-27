@@ -1,7 +1,7 @@
 <?php
 
 beforeEach(function () {
-	$this->form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect();
+	$this->form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
 });
 
 test('Honeypot - Html', function () {

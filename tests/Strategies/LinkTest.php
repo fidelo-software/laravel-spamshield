@@ -6,9 +6,8 @@ beforeEach(function () {
 
 test('Link - Detect false (no link used)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'John Smith']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'John Smith']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\LinkStrategy(0, ['name']);
 	$detected = $strategy->detect($form, $this->request);
@@ -19,9 +18,8 @@ test('Link - Detect false (no link used)', function () {
 
 test('Link - Detect true (link used - no links allowed)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'https://fidelo.com']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'https://fidelo.com']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\LinkStrategy(0, ['name']);
 	$detected = $strategy->detect($form, $this->request);
@@ -32,9 +30,8 @@ test('Link - Detect true (link used - no links allowed)', function () {
 
 test('Link - Detect false (link used - one link allowed)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['comment' => 'https://fidelo.com']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['comment' => 'https://fidelo.com']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\LinkStrategy(1, ['name']);
 	$detected = $strategy->detect($form, $this->request);
@@ -45,9 +42,8 @@ test('Link - Detect false (link used - one link allowed)', function () {
 
 test('Link - Detect false (link used multiple fields - one link allowed)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'https://fidelo.com', 'comment' => 'https://fidelo.com']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'https://fidelo.com', 'comment' => 'https://fidelo.com']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\LinkStrategy(1, ['name']);
 	$detected = $strategy->detect($form, $this->request);
@@ -58,9 +54,8 @@ test('Link - Detect false (link used multiple fields - one link allowed)', funct
 
 test('Link - Detect true (link used - one link allowed)', function () {
 
-	$form = mock(\FideloSoftware\Spam\Contracts\Form::class)->expect(
-		getFieldValues: fn () => ['name' => 'https://fidelo.com', 'comment' => 'https://fidelo.com']
-	);
+	$form = Mockery::mock(\FideloSoftware\Spam\Contracts\Form::class);
+	$form->shouldReceive('getFieldValues')->atLeast()->once()->andReturn(['name' => 'https://fidelo.com', 'comment' => 'https://fidelo.com']);
 
 	$strategy = new \FideloSoftware\Spam\Strategies\LinkStrategy(1, ['*']);
 	$detected = $strategy->detect($form, $this->request);
