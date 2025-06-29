@@ -41,8 +41,8 @@ class HoneypotStrategy extends AbstractStrategy {
 		foreach($fieldNames as $nameAttr) {
 			$html .= sprintf('
 				<div class="">
-					<label for="%s"></label>
-					<input type="text" name="%s" id="%s" value="" tabindex="-1" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false" placeholder="Please enter" />
+					<label for="%s">This part isn’t meant for you. Just sk<!-- nope -->ip it.</label>
+					<input type="text" name="%s" id="%s" value="" tabindex="-1" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false" aria-hidden="true" placeholder="Please enter" />
 				</div>', $nameAttr, $nameAttr, $nameAttr);
 		}
 
